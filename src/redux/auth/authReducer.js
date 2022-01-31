@@ -1,8 +1,14 @@
-import { LOGOUT_USER, LOGIN_SUCCESS, REGISTER_USER } from "./authTypes";
+import {
+  LOGOUT_USER,
+  LOGIN_SUCCESS,
+  REGISTER_USER,
+  LOGINERROR,
+} from "./authTypes";
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")) || null,
   token: JSON.parse(localStorage.getItem("token")) || null,
+  loginErrorMessage: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -26,6 +32,13 @@ const authReducer = (state = initialState, action) => {
         ...state,
         user: null,
         token: null,
+      };
+
+    case LOGINERROR:
+      //console.log("Happy bithday  not :-)  :::::::::", action.payload);
+      return {
+        ...state,
+        loginErrorMessage: action.payload,
       };
 
     default:

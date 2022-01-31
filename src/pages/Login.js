@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { loginStart } from "../redux/auth/authActions";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
@@ -71,6 +72,28 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const userLoginError = useSelector((state) => state.auth.loginErrorMessage);
+  // const [userLoginError, setUserLoginError] = useState(
+  //   useSelector((state) => state.auth.loginErrorMessage)
+  // );
+
+  useEffect(() => {
+    if (userLoginError) {
+      notify();
+    }
+  }, [userLoginError]);
+  const notify = () =>
+    toast.error(userLoginError, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const navigate = useNavigate();
@@ -94,6 +117,7 @@ const Login = () => {
       }
     }
   };
+
   return (
     <Container>
       <Wrapper>
@@ -103,7 +127,7 @@ const Login = () => {
             placeholder="Enter email"
             value={userData.email}
             onChange={(e) =>
-              setUserData({ ...userData, ["email"]: e.target.value })
+              setUserData({ ...userData, email: e.target.value })
             }
           />
           {emailError ? (
@@ -113,7 +137,7 @@ const Login = () => {
             placeholder="password"
             type={"password"}
             onChange={(e) =>
-              setUserData({ ...userData, ["password"]: e.target.value })
+              setUserData({ ...userData, password: e.target.value })
             }
             value={userData.password}
           />
@@ -129,6 +153,17 @@ const Login = () => {
           </Link>
         </Form>
       </Wrapper>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Container>
   );
 };
